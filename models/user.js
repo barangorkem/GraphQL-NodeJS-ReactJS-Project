@@ -13,10 +13,10 @@ const userSchema=new Schema({
         required:true
     },
    
-    createdEvents:{
+    createdEvents:[{
         type:Schema.Types.ObjectId,
         ref:'events'
-    }
+    }]
 })
 
 module.exports=mongoose.model('users',userSchema);
