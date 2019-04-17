@@ -6,14 +6,22 @@ const {transformBooking,transformEvent}=require('./merge');
 
 module.exports = {
   
-    bookings: () => {
+    bookings: (args,req) => {
+        if(!req.isAuth)
+        {
+            throw new Error("Unauthenticated");
+        }
         return Booking.find().then((bookings) => {
             return bookings.map(booking => {
                 return transformBooking(booking)
             })
         })
     },
-  bookEvent:(args)=>{
+  bookEvent:(args,req)=>{
+    if(!req.isAuth)
+    {
+        throw new Error("Unauthenticated");
+    }
     return  Event.findOne({_id:args.eventId})
       .then(event=>{
           if(!event)
@@ -38,8 +46,11 @@ module.exports = {
       })
       .catch(err=>{throw err;})
   },
-  cancelBooking:(args)=>{
-    console.log("cancel",args.bookingId);
+  cancelBooking:(args,req)=>{
+    if(!req.isAuth)
+    {
+        throw new Error("Unauthenticated");
+    }
     return Booking.findById(args.bookingId).populate('event')
     .then(booking=>{
         if(!booking)

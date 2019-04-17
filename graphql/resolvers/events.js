@@ -1,4 +1,5 @@
 const Event = require('../../models/event');
+const User=require('../../models/user');
 const {dateToString} =require('../../helpers/date');
 const {transformEvent}=require('./merge');
 
@@ -13,7 +14,11 @@ module.exports={
         }).catch(err => {
             throw err;
         })
-    },createEvent: (args) => {
+    },createEvent: (args,req) => {
+        if(!req.isAuth)
+        {
+            throw new Error("Unauthenticated");
+        }
         const event = new Event({
 
             title: args.eventInput.title,
